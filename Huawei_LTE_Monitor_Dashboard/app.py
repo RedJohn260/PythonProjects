@@ -35,7 +35,7 @@ def get_net_info():
 @app.route('/system/<command>', methods=['POST'])
 def system_command(command):
     router = router_api.get_router()
-    router.login(username='admin', password='samsung945')
+    router.login(username='', password='')
 
     try:
         if command == 'reboot':
@@ -61,7 +61,7 @@ def apply_network_settings():
     antenna = int(data.get('antenna', 3))  # default AUTO
 
     router = router_api.get_router()
-    router.login(username='admin', password='samsung945')
+    router.login(username='', password='')
 
     try:
         router.net.set_network_mode({'mode': mode})
@@ -105,7 +105,7 @@ def send_sms():
     message = data.get('message')
 
     router = router_api.get_router()
-    router.login(username='admin', password='samsung945')
+    router.login(username='', password='')
 
     xml_payload = f"""<?xml version="1.0" encoding="UTF-8"?>
     <request>

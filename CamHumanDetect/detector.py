@@ -9,8 +9,8 @@ import numpy as np
 import simpleaudio as sa
 
 # === TELEGRAM SETTINGS ===
-BOT_TOKEN = "7700209347:AAHmL1ofY99PaLXalUu7CaBhBkrW6PIEDag"
-CHAT_ID = "7882685644"
+BOT_TOKEN = ""
+CHAT_ID = ""
 ENABLE_TELEGRAM = False  # set to False if you don't wanna send messages
 telegram_toggle_msg = ""
 telegram_toggle_time = 0

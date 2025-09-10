@@ -10,7 +10,7 @@ prev_disk = psutil.disk_io_counters()
 prev_net = psutil.net_io_counters()
 
 def make_color(perc):
-    if perc < 25: return "blue"
+    if perc < 25: return "cyan"
     elif perc < 50: return "green"
     elif perc < 75: return "yellow"
     else: return "red"
