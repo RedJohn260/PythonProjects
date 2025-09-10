@@ -1,0 +1,116 @@
+<?xml version="1.0" ?>
+<response>
+	
+
+	<pci>426</pci>
+	
+
+	<sc/>
+	
+
+	<cell_id>38441481</cell_id>
+	
+
+	<rsrq>-12.0dB</rsrq>
+	
+
+	<rsrp>-100dBm</rsrp>
+	
+
+	<rssi>-73dBm</rssi>
+	
+
+	<sinr>13dB</sinr>
+	
+
+	<rscp/>
+	
+
+	<ecio/>
+	
+
+	<mode>7</mode>
+	
+
+	<ulbandwidth>20MHz</ulbandwidth>
+	
+
+	<dlbandwidth>20MHz</dlbandwidth>
+	
+
+	<txpower>PPusch:22dBm PPucch:11dBm PSrs:-40dBm PPrach:12dBm</txpower>
+	
+
+	<tdd/>
+	
+
+	<ul_mcs/>
+	
+
+	<dl_mcs/>
+	
+
+	<earfcn>DL:500 UL:18500</earfcn>
+	
+
+	<rrc_status>1</rrc_status>
+	
+
+	<rac/>
+	
+
+	<lac/>
+	
+
+	<tac>7001</tac>
+	
+
+	<band>1</band>
+	
+
+	<nei_cellid>No1:70No2:426No3:70</nei_cellid>
+	
+
+	<plmn>21901</plmn>
+	
+
+	<ims>0</ims>
+	
+
+	<wdlfreq/>
+	
+
+	<lteulfreq>19700</lteulfreq>
+	
+
+	<ltedlfreq>21600</ltedlfreq>
+	
+
+	<transmode/>
+	
+
+	<enodeb_id>0150162</enodeb_id>
+	
+
+	<cqi0/>
+	
+
+	<cqi1/>
+	
+
+	<ulfrequency>1970000kHz</ulfrequency>
+	
+
+	<dlfrequency>2160000kHz</dlfrequency>
+	
+
+	<arfcn/>
+	
+
+	<bsic/>
+	
+
+	<rxlev/>
+	
+
+</response>

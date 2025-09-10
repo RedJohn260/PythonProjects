@@ -1,0 +1,3 @@
+@echo off
+echo Running YOLOv8 Human Detection script...
+python detector.py

@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<response>
+	<NetworkMode>4G</NetworkMode>
+	<NetworkBands>
+		<Band>W2100</Band>
+		<Band>W900</Band>
+	</NetworkBands>
+	<LTEBands>
+		<Band>B1</Band>
+		<Band>B3</Band>
+	</LTEBands>
+</response>

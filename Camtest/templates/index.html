@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Webcam Stream</title>
+</head>
+<body>
+    <h2>Live Camera Feed</h2>
+    <img src="{{ url_for('video') }}">
+    <br><br>
+    <label>Brightness:</label>
+    <input type="range" min="0.5" max="2.0" step="0.1" value="1.0"
+        oninput="fetch('/brightness', {
+            method:'POST',
+            body: new URLSearchParams({'value': this.value})
+        })">
+    <br><br>
+    <button onclick="fetch('/screenshot').then(r => r.text()).then(alert)">📸 Screenshot</button>
+</body>
+</html>

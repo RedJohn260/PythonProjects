@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <a class="config-btn" href="/config">⚙️</a>
+  <div class="grid">
+    {% for url in urls %}
+      <iframe src="{{ url }}"></iframe>
+    {% endfor %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snapshot Viewer</title>
+    <style>
+        body {
+            background-color: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0; padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        .gallery img {
+            width: 100%;
+            max-width: 600px;
+            border: 3px solid #0f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .gallery img:hover {
+            transform: scale(1.05);
+            border-color: #ff0;
+        }
+        a.back-link {
+            display: block;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #0f0;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a.back-link:hover {
+            color: #ff0;
+        }
+        /* Fullscreen slideshow overlay */
+        #slideshowOverlay {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.95);
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            touch-action: none;
+        }
+        #slideshowOverlay img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border: 5px solid #0f0;
+            border-radius: 10px;
+            object-fit: contain;
+            display: block;
+            margin: auto;
+            /* transform origin center for zoom */
+            transform-origin: center center;
+            transition: transform 0.1s ease-out;
+        }
+        #slideshowOverlay .closeBtn {
+            position: absolute;
+            top: 20px; right: 30px;
+            font-size: 40px;
+            color: #0f0;
+            cursor: pointer;
+            user-select: none;
+            z-index: 10000;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to Live Stream</a>
+    <h2>Snapshot Gallery</h2>
+    <div class="gallery">
+        {% for file in files %}
+        <img src="{{ url_for('snapshot_file', filename=file) }}" alt="{{ file }}" loading="lazy" onclick="openSlideshow({{ loop.index0 }})">
+        {% else %}
+        <p>No snapshots found.</p>
+        {% endfor %}
+    </div>
+
+    <div id="slideshowOverlay" onclick="closeSlideshow()">
+        <span class="closeBtn" onclick="closeSlideshow(); event.stopPropagation();">&times;</span>
+        <img id="slideImage" src="" alt="Slideshow image" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        let images = [];
+        let scale = 1;
+        let startDistance = 0;
+        let currentTransform = { x: 0, y: 0 };
+
+        function openSlideshow(index) {
+            images = Array.from(document.querySelectorAll('.gallery img'));
+            currentIndex = index;
+            scale = 1;
+            currentTransform = { x: 0, y: 0 };
+
+            const overlay = document.getElementById('slideshowOverlay');
+            const slideImg = document.getElementById('slideImage');
+            slideImg.src = images[currentIndex].src;
+            slideImg.style.transform = 'translate(0px, 0px) scale(1)';
+            overlay.style.display = 'flex';
+        }
+
+        function closeSlideshow() {
+            document.getElementById('slideshowOverlay').style.display = 'none';
+        }
+
+        function showNext() {
+            currentIndex = (currentIndex + 1) % images.length;
+            resetZoom();
+            document.getElementById('slideImage').src = images[currentIndex].src;
+        }
+
+        function showPrev() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            resetZoom();
+            document.getElementById('slideImage').src = images[currentIndex].src;
+        }
+
+        function resetZoom() {
+            scale = 1;
+            currentTransform = { x: 0, y: 0 };
+            document.getElementById('slideImage').style.transform = 'translate(0px, 0px) scale(1)';
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const overlay = document.getElementById('slideshowOverlay');
+            if (overlay.style.display === 'flex') {
+                if (e.key === 'ArrowRight') showNext();
+                else if (e.key === 'ArrowLeft') showPrev();
+                else if (e.key === 'Escape') closeSlideshow();
+            }
+        });
+
+        // Touch swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const threshold = 50;
+
+        const overlay = document.getElementById('slideshowOverlay');
+        overlay.addEventListener('touchstart', e => {
+            if (e.touches.length === 1) {
+                touchStartX = e.touches[0].screenX;
+            } else if (e.touches.length === 2) {
+                startDistance = getDistance(e.touches[0], e.touches[1]);
+            }
+        }, {passive:true});
+
+        overlay.addEventListener('touchmove', e => {
+            if (e.touches.length === 2) {
+                e.preventDefault(); // prevent scroll zoom
+                let newDistance = getDistance(e.touches[0], e.touches[1]);
+                let zoomChange = newDistance / startDistance;
+                scale *= zoomChange;
+                scale = Math.min(Math.max(1, scale), 5);
+                startDistance = newDistance;
+                updateTransform();
+            } else if (e.touches.length === 1 && scale > 1) {
+                e.preventDefault(); // prevent scroll pan
+                let touch = e.touches[0];
+                if (!overlay.lastTouchX) {
+                    overlay.lastTouchX = touch.pageX;
+                    overlay.lastTouchY = touch.pageY;
+                }
+                let dx = touch.pageX - overlay.lastTouchX;
+                let dy = touch.pageY - overlay.lastTouchY;
+                overlay.lastTouchX = touch.pageX;
+                overlay.lastTouchY = touch.pageY;
+                currentTransform.x += dx;
+                currentTransform.y += dy;
+                updateTransform();
+            }
+        }, {passive:false});
+
+        overlay.addEventListener('touchend', e => {
+            if (e.touches.length < 2) {
+                delete overlay.lastTouchX;
+                delete overlay.lastTouchY;
+            }
+        }, {passive:true});
+
+        function getDistance(touch1, touch2) {
+            let dx = touch2.pageX - touch1.pageX;
+            let dy = touch2.pageY - touch1.pageY;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        function updateTransform() {
+            const img = document.getElementById('slideImage');
+            img.style.transform = `translate(${currentTransform.x}px, ${currentTransform.y}px) scale(${scale})`;
+        }
+
+        // Swipe left/right to change image (only when zoom = 1)
+        overlay.addEventListener('touchstart', e => {
+            if (scale === 1 && e.touches.length === 1) {
+                touchStartX = e.touches[0].screenX;
+            }
+        });
+
+        overlay.addEventListener('touchend', e => {
+            if (scale === 1 && e.changedTouches.length === 1) {
+                touchEndX = e.changedTouches[0].screenX;
+                if (touchEndX < touchStartX - threshold) showNext();
+                else if (touchEndX > touchStartX + threshold) showPrev();
+            }
+        });
+    </script>
+</body>
+</html>

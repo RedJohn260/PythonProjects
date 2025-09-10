@@ -1,0 +1,4 @@
+Flask==3.1.1
+IPy==1.1
+pycryptodome==3.23.0
+Requests==2.32.4

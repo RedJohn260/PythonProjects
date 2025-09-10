@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Huawei LTE Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<header>
+    <nav>
+        <ul class="nav-list">
+            <li><a href="/">Home</a></li>
+            <li><a href="http://192.168.8.1 " target="_blank">Router</a></li>
+            <li><a href="/messages" target="_blank">Messages</a></li>
+            <li><a href="/system" target="_blank">System</a></li>
+            <li><a href="/info" target="_blank">Info</a></li>
+            
+            <li id="signal-container">
+              <a href="#">
+                <div id="signal-bars">
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                </div>
+              </a>
+            </li>
+
+            <li id="notif-container">
+              <a href="/messages" id="notif-link">
+                <i class="fas fa-bell"></i>
+                <span id="notif-count" class="badge">{{ not_count }}</span>
+              </a>
+            </li>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        </ul>
+    </nav>
+</header>
+
+<main>
+  <h2>Huawei {{ info.device_name }} LTE Dashboard</h2>
+
+  <section class="card signal-info">
+    <span>Download: <span id="dl_speed">0</span></span>
+    <span>Upload: <span id="ul_speed">0</span></span>
+    <span>Band: <span id="band">{{ data.current_band }}</span></span>
+    <span>Range: <span id="dlbandwidth">{{ data.dl_bandwidth }}</span></span>
+    <!--<span>BandUp: <span id="ulbandwidth">{{ data.ul_bandwidth }}</span></span> -->
+  </section>
+
+  <section class="card charts">
+    <div class="chart-box">
+      <span id="rsrq_title" class="charts_title"></span>
+      <canvas id="rsrqChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <span id="rsrp_title" class="charts_title"></span>
+      <canvas id="rsrpChart"></canvas>
+    </div>
+  </section>
+</main>
+<script>
+let labels = [];
+let rsrqData = [];
+let rsrpData = [];
+let updateStatsTime = 5000;
+
+const rsrqCtx = document.getElementById('rsrqChart').getContext('2d');
+const rsrpCtx = document.getElementById('rsrpChart').getContext('2d');
+
+const rsrqChart = new Chart(rsrqCtx, {
+  type: 'line',
+  data: {
+    labels: labels,
+    datasets: [{
+      label: 'RSRQ',
+      borderColor: 'cyan',
+      data: rsrqData
+    }]
+  },
+  options: {
+    scales: {
+      y: { title: { display: true, text: 'dB' } }
+    }
+  }
+});
+
+const rsrpChart = new Chart(rsrpCtx, {
+  type: 'line',
+  data: {
+    labels: labels,
+    datasets: [{
+      label: 'RSRP',
+      borderColor: 'magenta',
+      data: rsrpData
+    }]
+  },
+  options: {
+    scales: {
+      y: { title: { display: true, text: 'dBm' } }
+    }
+  }
+});
+
+function updateStats() {
+  fetch('/data')
+    .then(res => res.json())
+    .then(data => {
+      // Update other stats here if you want
+      // For example current_band, dl_bandwidth, ul_bandwidth
+      document.getElementById('band').textContent = data.current_band;
+      document.getElementById('dlbandwidth').textContent = data.dl_bandwidth;
+      //document.getElementById('ulbandwidth').textContent = data.ul_bandwidth;
+      document.getElementById('rsrq_title').textContent = data.rsrq + " dB";
+      document.getElementById('rsrp_title').textContent = data.rsrp + " dBm";
+
+      // Also update charts as before
+      const time = new Date().toLocaleTimeString();
+      if (labels.length > 20) {
+        labels.shift(); rsrqData.shift(); rsrpData.shift();
+      }
+      labels.push(time);
+      rsrqData.push(data.rsrq);
+      rsrpData.push(data.rsrp);
+      rsrqChart.update();
+      rsrpChart.update();
+    });
+}
+
+function updateSpeeds() {
+  fetch('/speed')
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('dl_speed').textContent = data.dl_speed;
+      document.getElementById('ul_speed').textContent = data.ul_speed;
+    });
+}
+
+setInterval(updateSpeeds, 1000);
+setInterval(updateStats, updateStatsTime);
+</script>
+<script src="{{ url_for('static', filename='notif.js') }}"></script>
+</body>
+</html>

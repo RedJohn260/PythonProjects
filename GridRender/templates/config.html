@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="form-wrapper">
+    <h2>🛠 Grid Settings</h2>
+    <form method="POST">
+      <label>Number of Slots:</label>
+      <input type="number" name="slots" min="1" max="12" value="{{ slots }}"><br><br>
+
+      {% for i in range(slots) %}
+        <label>URL for Slot {{ i+1 }}:</label>
+        <input type="text" name="url{{ i }}" value="{{ urls[i] if i < urls|length else '' }}"><br>
+      {% endfor %}
+
+      <button type="submit">Update Grid</button>
+    </form>
+    <a class="back-link" href="/">← Back to Grid</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<?xml version="1.0" ?>
+<response>
+	
+
+	<ConnectionStatus>901</ConnectionStatus>
+	
+
+	<WifiConnectionStatus/>
+	
+
+	<SignalStrength/>
+	
+
+	<SignalIcon>4</SignalIcon>
+	
+
+	<CurrentNetworkType>19</CurrentNetworkType>
+	
+
+	<CurrentServiceDomain>3</CurrentServiceDomain>
+	
+
+	<RoamingStatus>0</RoamingStatus>
+	
+
+	<BatteryStatus/>
+	
+
+	<BatteryLevel/>
+	
+
+	<BatteryPercent/>
+	
+
+	<simlockStatus>0</simlockStatus>
+	
+
+	<PrimaryDns>195.29.247.161</PrimaryDns>
+	
+
+	<SecondaryDns>195.29.247.162</SecondaryDns>
+	
+
+	<wififrequence>1</wififrequence>
+	
+
+	<flymode>0</flymode>
+	
+
+	<PrimaryIPv6Dns/>
+	
+
+	<SecondaryIPv6Dns/>
+	
+
+	<CurrentWifiUser>4</CurrentWifiUser>
+	
+
+	<TotalWifiUser>64</TotalWifiUser>
+	
+
+	<currenttotalwifiuser>64</currenttotalwifiuser>
+	
+
+	<ServiceStatus>2</ServiceStatus>
+	
+
+	<SimStatus>1</SimStatus>
+	
+
+	<WifiStatus>1</WifiStatus>
+	
+
+	<CurrentNetworkTypeEx>1011</CurrentNetworkTypeEx>
+	
+
+	<maxsignal>5</maxsignal>
+	
+
+	<wifiindooronly>0</wifiindooronly>
+	
+
+	<cellroam>1</cellroam>
+	
+
+	<classify>cpe</classify>
+	
+
+	<usbup>0</usbup>
+	
+
+	<wifiswitchstatus>1</wifiswitchstatus>
+	
+
+	<WifiStatusExCustom>0</WifiStatusExCustom>
+	
+
+	<hvdcp_online>0</hvdcp_online>
+	
+
+	<speedLimitStatus>0</speedLimitStatus>
+	
+
+	<poorSignalStatus>0</poorSignalStatus>
+	
+
+</response>

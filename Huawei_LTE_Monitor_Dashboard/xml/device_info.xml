@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<response>
+	
+
+	<DeviceName>B535-333</DeviceName>
+	
+
+	<SerialNumber>FGX7S21719001495</SerialNumber>
+	
+
+	<Imei>861944051641675</Imei>
+	
+
+	<Imsi>219019914102213</Imsi>
+	
+
+	<Iccid>8938599212418422136</Iccid>
+	
+
+	<Msisdn>+385989766721</Msisdn>
+	
+
+	<HardwareVersion>WL4B535SW</HardwareVersion>
+	
+
+	<SoftwareVersion>11.0.5.51(H470SP6C9831)</SoftwareVersion>
+	
+
+	<WebUIVersion>WEBUI 11.0.5.51(W2SP36C7201)</WebUIVersion>
+	
+
+	<MacAddress1>22:3C:C5:00:77:86</MacAddress1>
+	
+
+	<MacAddress2/>
+	
+
+	<WanIPAddress>10.142.107.36</WanIPAddress>
+	
+
+	<wan_dns_address>195.29.247.161,195.29.247.162</wan_dns_address>
+	
+
+	<WanIPv6Address/>
+	
+
+	<wan_ipv6_dns_address/>
+	
+
+	<ProductFamily>LTE</ProductFamily>
+	
+
+	<Classify>cpe</Classify>
+	
+
+	<supportmode>LTE|WCDMA|GSM</supportmode>
+	
+
+	<workmode>LTE</workmode>
+	
+
+	<submask>255.255.255.255</submask>
+	
+
+	<Mccmnc>21901</Mccmnc>
+	
+
+	<iniversion>B535-333-CUST 11.0.2.51(C965)</iniversion>
+	
+
+	<uptime>16359</uptime>
+	
+
+	<ImeiSvn>14</ImeiSvn>
+	
+
+	<WifiMacAddrWl0>22:3C:C5:00:77:88</WifiMacAddrWl0>
+	
+
+	<WifiMacAddrWl1>22:3C:C5:00:77:8C</WifiMacAddrWl1>
+	
+
+	<spreadname_en>4G CPE 3</spreadname_en>
+	
+
+	<spreadname_zh>4G CPE 3</spreadname_zh>
+	
+
+</response>

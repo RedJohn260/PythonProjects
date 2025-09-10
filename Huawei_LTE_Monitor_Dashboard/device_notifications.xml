@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<error>
+	<code>2000</code>
+	<message>Python API: api - Unexpected error: &lt;class 'TypeError'&gt;</message>
+</error>

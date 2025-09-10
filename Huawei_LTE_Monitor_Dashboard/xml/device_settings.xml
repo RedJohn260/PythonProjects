@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<response>
+	<PrimaryDns>192.168.8.1</PrimaryDns>
+	<SecondaryDns>192.168.8.1</SecondaryDns>
+	<DnsStatus>1</DnsStatus>
+	<DhcpIPAddress>192.168.8.1</DhcpIPAddress>
+	<DhcpStatus>1</DhcpStatus>
+	<DhcpStartIPAddress>192.168.8.100</DhcpStartIPAddress>
+	<DhcpEndIPAddress>192.168.8.200</DhcpEndIPAddress>
+	<DhcpLeaseTime>86400</DhcpLeaseTime>
+	<homeurl>homerouter.cpe</homeurl>
+	<accessipaddress/>
+	<DhcpLanNetmask>255.255.255.0</DhcpLanNetmask>
+</response>

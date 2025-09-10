@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/slim-select@1.27.0/dist/slimselect.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/slim-select@1.27.0/dist/slimselect.min.js"></script>
+    
+    <title>System Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header>
+    <nav>
+        <ul class="nav-list">
+            <li><a href="/">Home</a></li>
+            <li><a href="http://192.168.8.1 " target="_blank">Router</a></li>
+            <li><a href="/messages" target="_blank">Messages</a></li>
+            <li><a href="/system" target="_blank">System</a></li>
+            <li><a href="/info" target="_blank">Info</a></li>
+            
+            <li id="signal-container">
+              <a href="#">
+                <div id="signal-bars">
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                </div>
+              </a>
+            </li>
+
+            <li id="notif-container">
+              <a href="/messages" id="notif-link">
+                <i class="fas fa-bell"></i>
+                <span id="notif-count" class="badge">{{ not_count }}</span>
+              </a>
+            </li>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        </ul>
+    </nav>
+</header>
+
+<main>
+  <h2>System Control</h2>
+
+  <section class="card network-info">
+    <h3>Network Info</h3>
+    <p><strong>Mode:</strong>
+        <span id="net_mode" class="band-pill">{{ net_info.mode }}</span>
+    </p>
+    <p><strong>Network Bands:</strong>
+      <span id="network_bands">
+      {% for band in net_info.network_bands %}
+        <span class="band-pill">{{ band }}</span>
+      {% endfor %}
+      </span>
+    </p>
+    <p><strong>LTE Bands:</strong>
+      <span id="lte_bands">
+      {% for band in net_info.lte_bands %}
+        <span class="band-pill">{{ band }}</span>
+      {% endfor %}
+      </span>
+    </p>
+    <p><strong>Antenna Mode:</strong>
+      <span id="antenna_text" class="band-pill">{{antenna}}</span>
+    </p>
+  </section>
+
+  <section class="card network-mode">
+    <h3>Set Network Mode</h3>
+
+  <div class="form-group">
+    <label for="network_mode_select">
+      <strong>Network Mode:</strong>
+    </label>
+    <select id="network_mode_select">
+      <option value="AUTO">AUTO</option>
+      <option value="4G">4G</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="lte_band_select"><strong>LTE Bands:</strong></label>
+    <select id="lte_band_select" multiple>
+      <option value="B1">B1</option>
+      <option value="B3">B3</option>
+      <option value="B8">B8</option>
+      <option value="B20">B20</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="antenna_mode_select">
+      <strong>Antenna Mode:</strong>
+    </label>
+    <select id="antenna_mode_select">
+      <option value="0">AUTO</option>
+      <option value="1">External</option>
+      <option value="2">Internal</option>
+      <option value="3">Mixed</option>
+    </select>
+  </div>
+
+    <button class="apl_btn" onclick="applyNetworkSettings()">Apply</button>
+    <div id="net-msg" class="response-message"></div>
+  </section>
+
+  <section class="card system-controls">
+    <h3>Router Controls</h3>
+    <button class="btn btn-reboot" onclick="sendCommand('reboot')">Reboot Router</button>
+    <button class="btn btn-poweroff" onclick="sendCommand('poweroff')">Power Off Router</button>
+    <div id="response-message" class="response-message"></div>
+  </section>
+</main>
+
+<script>
+
+// Restore values on load
+window.addEventListener('DOMContentLoaded', () => {
+  const mode = localStorage.getItem('net_mode');
+  const bands = JSON.parse(localStorage.getItem('net_bands') || '[]');
+  const antenna = localStorage.getItem('net_antenna');
+
+  if (mode) document.querySelector('#network_mode_select').value = mode;
+  if (antenna) document.querySelector('#antenna_mode_select').value = antenna;
+
+  const lteSelect = document.querySelector('#lte_band_select');
+  for (let opt of lteSelect.options) {
+    opt.selected = bands.includes(opt.value);
+  }
+
+  // re-init SlimSelect with updated selections
+  new SlimSelect({ select: '#lte_band_select', showSearch: false, multiple: true });
+  new SlimSelect({ select: '#network_mode_select', showSearch: false });
+  new SlimSelect({ select: '#antenna_mode_select', showSearch: false });
+  updateAntennaMode()
+});
+
+function sendCommand(command) {
+  fetch(`/system/${command}`, { method: 'POST' })
+    .then(response => response.json())
+    .then(data => {
+      const msgDiv = document.getElementById('response-message');
+      msgDiv.textContent = data.message;
+      msgDiv.classList.add('visible');
+      setTimeout(() => msgDiv.classList.remove('visible'), 4000);
+    })
+    .catch(() => {
+      const msgDiv = document.getElementById('response-message');
+      msgDiv.textContent = 'Error sending command.';
+      msgDiv.classList.add('visible');
+      setTimeout(() => msgDiv.classList.remove('visible'), 4000);
+    });
+}
+
+function applyNetworkSettings() {
+  const mode = document.getElementById('network_mode_select').value;
+  const bands = Array.from(document.getElementById('lte_band_select').selectedOptions).map(opt => opt.value);
+  const antenna = document.getElementById('antenna_mode_select').value;
+
+
+  fetch(`/system/applysettings`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mode, bands, antenna })
+  })
+  .then(res => res.json())
+  .then(data => {
+    const msg = document.getElementById('net-msg');
+    msg.textContent = data.message;
+    msg.classList.add('visible');
+    setTimeout(() => msg.classList.remove('visible'), 4000);
+
+  updateAntennaMode();
+  saveSettingsToStorage(mode, bands, antenna);
+
+// Update displayed network info
+  fetch('/system/netinfo')
+    .then(res => res.json())
+    .then(netInfo => {
+    document.getElementById('net_mode').textContent = netInfo.mode;
+    document.getElementById('network_bands').innerHTML = netInfo.network_bands.map(b => `<span class="band-pill">${b}</span>`).join('');
+    document.getElementById('lte_bands').innerHTML = netInfo.lte_bands.map(b => `<span class="band-pill">${b}</span>`).join('');
+    });
+  });
+}
+
+
+function updateAntennaMode(){
+  const antennaNames = {
+  '0': 'AUTO',
+  '1': 'External',
+  '2': 'Internal',
+  '3': 'Mixed'
+};
+const select = document.getElementById('antenna_mode_select').value;
+document.getElementById('antenna_text').textContent = antennaNames[select] || 'Unknown';
+}
+ 
+updateAntennaMode();
+// Save values
+function saveSettingsToStorage(mode, bands, antenna) {
+  localStorage.setItem('net_mode', mode);
+  localStorage.setItem('net_bands', JSON.stringify(bands));
+  localStorage.setItem('net_antenna', antenna);
+}
+
+</script>
+<script src="{{ url_for('static', filename='notif.js') }}"></script>
+</body>
+</html>

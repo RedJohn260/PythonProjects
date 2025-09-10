@@ -1,0 +1,3 @@
+@echo off
+echo Installing Huawei LTE Monitoring Dashboard requirements...
+pip install -r requirements.txt

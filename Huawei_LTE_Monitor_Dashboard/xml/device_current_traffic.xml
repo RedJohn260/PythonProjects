@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<response>
+	
+
+	<CurrentConnectTime>5842</CurrentConnectTime>
+	
+
+	<CurrentUpload>86986354</CurrentUpload>
+	
+
+	<CurrentDownload>6133007433</CurrentDownload>
+	
+
+	<CurrentDownloadRate>485904</CurrentDownloadRate>
+	
+
+	<CurrentUploadRate>10963</CurrentUploadRate>
+	
+
+	<TotalUpload>45602852468</TotalUpload>
+	
+
+	<TotalDownload>1314922903899</TotalDownload>
+	
+
+	<TotalConnectTime>6220840</TotalConnectTime>
+	
+
+	<showtraffic>1</showtraffic>
+	
+
+	<MaxUploadRate>52861</MaxUploadRate>
+	
+
+	<MaxDownloadRate>2203581</MaxDownloadRate>
+	
+
+</response>

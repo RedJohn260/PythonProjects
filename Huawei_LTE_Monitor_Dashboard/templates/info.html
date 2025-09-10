@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/slim-select@1.27.0/dist/slimselect.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/slim-select@1.27.0/dist/slimselect.min.js"></script>
+  
+  <title>System information</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header>
+    <nav>
+        <ul class="nav-list">
+            <li><a href="/">Home</a></li>
+            <li><a href="http://192.168.8.1 " target="_blank">Router</a></li>
+            <li><a href="/messages" target="_blank">Messages</a></li>
+            <li><a href="/system" target="_blank">System</a></li>
+            <li><a href="/info" target="_blank">Info</a></li>
+            
+            <li id="signal-container">
+              <a href="#">
+                <div id="signal-bars">
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                </div>
+              </a>
+            </li>
+
+            <li id="notif-container">
+              <a href="/messages" id="notif-link">
+                <i class="fas fa-bell"></i>
+                <span id="notif-count" class="badge">{{ not_count }}</span>
+              </a>
+            </li>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <h2>System information</h2>
+    <section class="card sms-list">
+        <p><strong>Device Name:</strong>
+            <span id="info_value" >{{ info.device_name }}</span>
+        </p>
+        <p><strong>Serial Number:</strong>
+            <span id="info_value" >{{ info.serial_number }}</span>
+        </p>
+        <p><strong>IMEI:</strong>
+            <span id="info_value" >{{ info.imei }}</span>
+        </p>
+        <p><strong>IMSI:</strong>
+            <span id="info_value" >{{ info.imsi }}</span>
+        </p>
+        <p><strong>ICCID:</strong>
+            <span id="info_value" >{{ info.iccid }}</span>
+        </p>
+        <p><strong>MSISDN:</strong>
+            <span id="info_value" >{{ info.msisdn }}</span>
+        </p>
+        <p><strong>Hardware Ver:</strong>
+            <span id="info_value" >{{ info.hardver_version }}</span>
+        </p>
+        <p><strong>Softver Ver:</strong>
+            <span id="info_value" >{{ info.software_version }}</span>
+        </p>
+        <p><strong>Web UI Version:</strong>
+            <span id="info_value" >{{ info.webui_version }}</span>
+        </p>
+        <p><strong>MAC:</strong>
+            <span id="info_value" >{{ info.mac_adress }}</span>
+        </p>
+        <p><strong>WAN DNS:</strong>
+            <span id="info_value" >{{ info.wan_dns_address }}</span>
+        </p>
+        <p><strong>Product Family:</strong>
+            <span id="info_value" >{{ info.product_family }}</span>
+        </p>
+        <p><strong>Classify:</strong>
+            <span id="info_value" >{{ info.classify }}</span>
+        </p>
+        <p><strong>Support Mode:</strong>
+            <span id="info_value" >{{ info.supportmode }}</span>
+        </p>
+        <p><strong>WAN IP:</strong>
+            <span id="info_value" >{{ info.wan_ip_adress }}</span>
+        </p>
+        <p><strong>Workmode:</strong>
+            <span id="info_value" >{{ info.workmode }}</span>
+        </p>
+        <p><strong>Submask:</strong>
+            <span id="info_value" >{{ info.submask }}</span>
+        </p>
+        <p><strong>MCCMNC:</strong>
+            <span id="info_value" >{{ info.mccmnc }}</span>
+        </p>
+        <p><strong>Inversion:</strong>
+            <span id="info_value" >{{ info.iniversion }}</span>
+        </p>
+        <p><strong>Uptime:</strong>
+            <span id="info_value" >{{ info.uptime }}</span>
+        </p>
+        <p><strong>IMEI SVN:</strong>
+            <span id="info_value" >{{ info.imei_svn }}</span>
+        </p>
+        <p><strong>WiFi 10 MAC</strong>
+            <span id="info_value" >{{ info.wifi_mac_addr_wl0 }}</span>
+        </p>
+        <p><strong>WiFi 11 MAC:</strong>
+            <span id="info_value" >{{ info.wifi_mac_addr_wl1 }}</span>
+        </p>
+        <p><strong>Name:</strong>
+            <span id="info_value" >{{ info.spreadname_en }}</span>
+        </p>
+    </section>
+</main>
+<script src="{{ url_for('static', filename='notif.js') }}"></script>

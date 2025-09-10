@@ -1,0 +1,3 @@
+@echo off
+echo Running Huawei LTE Monitoring Dashboard script...
+python app.py

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO Detection Stream</title>
+    <style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #111;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h2 {
+        text-align: center;
+        margin: 10px 0;
+        font-size: 22px;
+    }
+
+    img {
+        border: 3px solid #0f0;
+        border-radius: 10px;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 15px;
+        gap: 10px;
+        width: 100%;
+    }
+
+    button {
+        flex: 1 1 45%;
+        min-width: 140px;
+        padding: 12px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .on {
+        background-color: #0f0;
+        color: black;
+    }
+
+    .off {
+        background-color: #f00;
+        color: white;
+    }
+    .offblue {
+        background-color: #007BFF;
+        color: white;
+    }
+
+    @media (max-width: 400px) {
+        button {
+            flex: 1 1 100%;
+        }
+
+        h2 {
+            font-size: 18px;
+        }
+    }
+    .sliders {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 640px; /* max width on desktop */
+      margin-top: 15px;
+      padding: 0 10px; /* some side padding on small screens */
+    }
+
+    .slider-container {
+      width: 100%;
+      color: white;
+    }
+
+    .slider-container label {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type=range] {
+      width: 100%;
+      height: 30px;  /* thicker slider bar */
+      -webkit-appearance: none;
+      background: #333;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 30px;
+      background: #0f0;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      margin-top: -3px; /* center thumb vertically */
+    }
+
+    input[type=range]::-moz-range-thumb {
+      width: 25px;
+      height: 30px;
+      background: #0f0;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+    }
+</style>
+</head>
+<body>
+    <h2>🧠 YOLO Live Detection</h2>
+    <img src="/video_feed" id="videoFeed"><br>
+    <div class="buttons">
+        <button id="beepBtn" class="on" onclick="toggle('beep')">Beep: ON 🔊</button>
+        <button id="telegramBtn" class="off" onclick="toggle('telegram')">Telegram: OFF ❌</button>
+        <button id="nightVisionBtn" class="off" onclick="toggleNightVision()">Night Vision: OFF ☀️</button>
+        <button id="resetBtn" class="off" onclick="resetSliders()">Reset Sliders ♻️</button>
+        <button id="deleteSnapshotsBtn" class="offblue" onclick="deleteAllSnapshots()">Delete Snapshots 🗑️</button>
+    </div>
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="/snapshots" style="color: #0f0; font-weight: bold; text-decoration: none; font-size: 18px;">
+            View Snapshots 📸
+        </a>
+    </div>
+    <div class="sliders">
+      <div class="slider-container">
+        <label for="brightnessRange">Brightness: <span id="brightnessValue">1.0</span></label><br>
+        <input type="range" id="brightnessRange" min="0.5" max="1.5" step="0.01" value="1.0" oninput="updateBrightness(this.value)">
+      </div>
+
+      <div class="slider-container">
+        <label for="contrastRange">Contrast: <span id="contrastValue">1.0</span></label><br>
+        <input type="range" id="contrastRange" min="0.5" max="2.0" step="0.01" value="1.0" oninput="updateContrast(this.value)">
+      </div>
+    </div>
+
+    <script>
+        function updateButtons(state) {
+            const beepBtn = document.getElementById("beepBtn");
+            const telegramBtn = document.getElementById("telegramBtn");
+
+            beepBtn.textContent = "Beep: " + (state.beep ? "ON 🔊" : "OFF 🔇");
+            beepBtn.className = state.beep ? "on" : "off";
+
+            telegramBtn.textContent = "Telegram: " + (state.telegram ? "ON ✅" : "OFF ❌");
+            telegramBtn.className = state.telegram ? "on" : "off";
+        }
+
+        function toggle(type) {
+            fetch('/toggle/' + type)
+                .then(res => res.json())
+                .then(data => {
+                    const btn = document.getElementById(type + 'Btn');
+                    if (btn) {
+                        btn.innerHTML = data.label;
+                        btn.className = data.state ? 'on' : 'off';
+                    }
+                })
+                .catch(err => {
+                    console.error("Toggle error:", err);
+                });
+        }
+
+        function updateBrightness(val) {
+            document.getElementById('brightnessValue').textContent = val;
+            fetch(`/set_brightness/${val}`);
+        }
+
+        function updateContrast(val) {
+            document.getElementById('contrastValue').textContent = val;
+            fetch(`/set_contrast/${val}`);
+        }
+
+        function resetSliders() {
+            document.getElementById('brightnessRange').value = 1.0;
+            document.getElementById('contrastRange').value = 1.0;
+            document.getElementById('brightnessValue').textContent = '1.0';
+            document.getElementById('contrastValue').textContent = '1.0';
+
+            fetch('/set_brightness/1.0');
+            fetch('/set_contrast/1.0');
+        }
+
+        function deleteAllSnapshots() {
+            if (confirm("Delete all snapshots?")) {
+                fetch('/delete_snapshots', { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => {
+                        alert("Snapshots deleted");
+                        location.reload();
+                    });
+            }
+        }
+
+        function isMobile() {
+            return /Mobi|Android/i.test(navigator.userAgent);
+        }
+        function updateBrightness(val) {
+            document.getElementById('brightnessValue').textContent = val;
+            fetch(`/set_brightness/${val}`);
+            localStorage.setItem('brightness', val);
+            document.getElementById('brightnessRange').value = val;
+        }
+        function toggleNightVision() {
+          fetch('/toggle/night_vision')
+            .then(res => res.json())
+            .then(data => {
+              const btn = document.getElementById('nightVisionBtn');
+              btn.innerHTML = data.label;
+              btn.className = data.state ? 'on' : 'off';
+            })
+            .catch(err => console.error('Night Vision toggle error:', err));
+        }
+
+        function updateContrast(val) {
+            document.getElementById('contrastValue').textContent = val;
+            fetch(`/set_contrast/${val}`);
+            localStorage.setItem('contrast', val);
+            document.getElementById('contrastRange').value = val;
+        }
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'brightness') {
+                const val = e.newValue;
+                document.getElementById('brightnessRange').value = val;
+                document.getElementById('brightnessValue').textContent = val;
+                fetch(`/set_brightness/${val}`);
+            } else if (e.key === 'contrast') {
+                const val = e.newValue;
+                document.getElementById('contrastRange').value = val;
+                document.getElementById('contrastValue').textContent = val;
+                fetch(`/set_contrast/${val}`);
+            }
+        });
+
+        window.onload = function () {
+            fetch('/status')
+                .then(res => res.json())
+                .then(updateButtons);
+
+            const savedBrightness = localStorage.getItem('brightness');
+                if (savedBrightness !== null) updateBrightness(savedBrightness);
+                const savedContrast = localStorage.getItem('contrast');
+                if (savedContrast !== null) updateContrast(savedContrast);
+
+            const videoImg = document.getElementById('videoFeed');
+            if (isMobile()) {
+                videoImg.style.width = "100%";
+                videoImg.style.maxWidth = "100%";
+            } else {
+                videoImg.style.width = "640px";
+                videoImg.style.maxWidth = "640px";
+            }
+        };
+    </script>
+</body>
+</html>

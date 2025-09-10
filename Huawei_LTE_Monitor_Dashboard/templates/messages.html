@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/slim-select@1.27.0/dist/slimselect.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/slim-select@1.27.0/dist/slimselect.min.js"></script>
+  
+  <title>SMS Messages</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header>
+    <nav>
+        <ul class="nav-list">
+            <li><a href="/">Home</a></li>
+            <li><a href="http://192.168.8.1 " target="_blank">Router</a></li>
+            <li><a href="/messages" target="_blank">Messages</a></li>
+            <li><a href="/system" target="_blank">System</a></li>
+            <li><a href="/info" target="_blank">Info</a></li>
+            
+            <li id="signal-container">
+              <a href="#">
+                <div id="signal-bars">
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                </div>
+              </a>
+            </li>
+
+            <li id="notif-container">
+              <a href="/messages" id="notif-link">
+                <i class="fas fa-bell"></i>
+                <span id="notif-count" class="badge">{{ not_count }}</span>
+              </a>
+            </li>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <h2>SIM Info</h2>
+    <section class="card sms-list">
+        <p><strong>Sim number:</strong>
+            <span id="info_value">{{ sim }}</span>
+        </p>
+        <p><strong>Total Messages:</strong>
+              <span id="info_value">{{ messages|length }}</span>
+        </p>
+    </section>
+  <h2>SMS Inbox Messages</h2>
+    <section class="card sms-list">
+      {% for sms in messages %}
+      <div class="sms-message" data-index="{{ sms.index }}">
+        <div class="sms-header">
+          <strong>From:</strong> {{ sms.phone }}
+          <span class="sms-date">{{ sms.date }}</span>
+          <button class="delete-btn" onclick="deleteMessage('{{ sms.index }}')">Delete</button>
+        </div>
+        <div class="sms-content">{{ sms.content }}</div>
+      </div>
+      {% endfor %}
+      <div id="net-msg" class="response-message"></div>
+      <button id="delete-all-btn" onclick="deleteAllMessages()">Delete All</button>
+    </section>
+
+    <section class="card">
+      <h3>Send SMS</h3>
+      <input type="text" id="sms_phone" placeholder="Phone number">
+      <textarea id="sms_message" placeholder="Your message here"></textarea>
+      <button class="send-btn" onclick="sendSMS()">Send</button>
+      <div id="sms-msg" class="response-message"></div>
+    </section>
+
+    <section class="card">
+      <h3>Message Sent History</h3>
+      <span id="sms-history"></span>
+      <button class="send-btn" onclick="clearSentMessages()">Clear Histoy</button>
+      <div class="response-message"></div>
+    </section>
+
+</main>
+<script>
+function deleteMessage(index) {
+  if (!confirm("Delete this message?")) return;
+
+  fetch(`/delete_sms/${index}`, { method: 'POST' })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data.message);
+      alert(data.message);
+      const msgElem = document.querySelector(`.sms-message[data-index="${index}"]`);
+      if (msgElem) msgElem.remove();
+    })
+    .catch(err => alert("Error deleting message."));
+}
+
+function deleteAllMessages() {
+  fetch(`/delete-all-sms`, { method: 'POST' })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data.message);
+      document.querySelectorAll('.sms-message').forEach(msg => msg.remove());
+    });
+}
+
+function sendSMS() {
+  const phone = document.getElementById('sms_phone').value.trim();
+  const message = document.getElementById('sms_message').value.trim();
+
+  if (!phone || !message) {
+    alert('Fill in both phone and message, naughty!');
+    return;
+  }
+
+  fetch('/send_sms', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phone, message })
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      document.getElementById('sms_phone').value = '';
+      document.getElementById('sms_message').value = '';
+    })
+    .catch(() => alert('Oops, failed to send that naughty text!'));
+}
+</script>
+<script src="{{ url_for('static', filename='notif.js') }}"></script>
+</body>
+</html>
