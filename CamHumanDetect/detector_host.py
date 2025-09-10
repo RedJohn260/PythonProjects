@@ -13,8 +13,8 @@ from flask import render_template
 from flask import send_from_directory
 
 # === TELEGRAM SETTINGS ===
-BOT_TOKEN = "7700209347:AAHmL1ofY99PaLXalUu7CaBhBkrW6PIEDag"
-CHAT_ID = "7882685644"
+BOT_TOKEN = ""
+CHAT_ID = ""
 ENABLE_TELEGRAM = False
 ENABLE_BEEP = False
 telegram_toggle_msg = ""
