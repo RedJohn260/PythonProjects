@@ -1,0 +1,18 @@
+{
+  "subnet": "192.168.8.0/24",
+  "telegram_token": "",
+  "telegram_chat_id": "",
+  "email_sender": "",
+  "email_password": "",
+  "email_receiver": "",
+
+  "exclude_macs": [
+    "00:AA:BB:CC:DD:EE"
+  ],
+  "exclude_ips": [
+    "192.168.8.1"
+  ],
+  "aliases": {
+    "00:AA:BB:CC:DD:EE": "Desktop PC"
+  }
+}
