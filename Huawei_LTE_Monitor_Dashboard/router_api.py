@@ -2,9 +2,9 @@ import xml.etree.ElementTree as ET
 from huawei_lte.router import B525Router
 import atexit
 
-IP = "192.168.8.1"
-USERNAME = "admin"
-PASSWORD = "samsung945"
+IP = ""
+USERNAME = ""
+PASSWORD = ""
 
 router = B525Router(IP)
 router.login(username=USERNAME, password=PASSWORD)

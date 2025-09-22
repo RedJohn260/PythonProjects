@@ -1,7 +1,12 @@
 from flask import Flask, render_template, jsonify, request
 import router_api as router_api
+import logging
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.WARNING)  # suppress all requests logs by default
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def dashboard():

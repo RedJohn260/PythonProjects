@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import router_api
 
 router = B525Router('192.168.8.1')
-router.login('admin', 'pass')  # replace with your real password
+router.login('admin', 'samsung945')  # replace with your real password
 
 xml_data = {
      'PageIndex': 1,
