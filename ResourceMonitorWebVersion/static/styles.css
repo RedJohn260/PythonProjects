@@ -1,0 +1,45 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    color: #fff;
+    font-family: monospace;
+}
+
+h1 {
+    color: cyan;
+    margin: 10px;
+    text-align: center;
+}
+
+h2 {
+    color: cyan;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    height: calc(100vh - 60px); /* Adjust based on h1 height + margins */
+    overflow: hidden;
+}
+
+.column {
+    flex: 1;
+    max-width: 45%;
+    overflow-y: auto;
+    margin: 0 10px;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid cyan;
+    width: 100%;
+}
+
+td, th {
+    padding: 5px;
+    border: 1px solid cyan;
+}

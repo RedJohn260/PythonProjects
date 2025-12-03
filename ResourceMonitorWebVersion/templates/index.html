@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PC Resource Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>PC Resource Monitor</h1>
+    <div class="container">
+        <div class="column">
+            <h2>CPU Monitor</h2>
+            <table id="cpu-table">
+                <thead>
+                    <tr>
+                        <th>Resource</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="column">
+            <h2>System Monitor</h2>
+            <table id="system-table">
+                <thead>
+                    <tr>
+                        <th>Resource</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function updateTable(tableId, rows) {
+            const tbody = document.getElementById(tableId).querySelector('tbody');
+            tbody.innerHTML = '';
+            rows.forEach(row => {
+                const tr = document.createElement('tr');
+                const td1 = document.createElement('td');
+                td1.innerHTML = row[0];
+                const td2 = document.createElement('td');
+                td2.innerHTML = row[1];
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tbody.appendChild(tr);
+            });
+        }
+
+        function refreshData() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    updateTable('cpu-table', data.cpu_rows);
+                    updateTable('system-table', data.system_rows);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Refresh every 1 second
+        setInterval(refreshData, 1000);
+
+        // Initial refresh
+        window.onload = refreshData;
+    </script>
+</body>
+</html>
